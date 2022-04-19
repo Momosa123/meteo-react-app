@@ -1,9 +1,79 @@
+*{
+  box-sizing: border-box;
+}
 body {
   margin: 0;
+  padding: 0;
  color: #fff;
+ background: rgb(80,70,247);
+ background: linear-gradient(45deg, rgba(80,70,247,1) 0%, rgba(9,9,121,1) 0%, rgba(255,0,241,1) 100%);
+ width: 100vw;
+ height: 100vh;
+ text-align: center;
+ display: flex;
+ flex-direction: column;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.current-meteo-container{
+  width: 90%;
+  height: 400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rem;
+}
+.input-label{
+  width: 300px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.meteo-container{
+  text-align: center;
+ /* width: 900px;
+ margin: 0 auto; */
+/* margin-bottom: 3rem; */
+ display: flex;
+ align-items: center;
+}
+.sentence-container{
+  width: 500px;
+}
+label{
+  margin-right: 1rem;
+}
+
+button{
+  padding: 5px;
+  margin-top: 1rem;
+  cursor: pointer;
+}
+
+.meteo-image{
+  width: 300px;
+  animation: move 10s  infinite alternate;
+}
+
+@keyframes move {
+  /* Add stages below */
+  30%{
+    transform: translateX(50px);
+  }
+  70%{
+    transform: translateX(-50px);
+  }
+}
+
+
+
+.daily-meteo-container{
+  display: grid;
+  grid-template-columns:  repeat(8, 1fr);
 }
