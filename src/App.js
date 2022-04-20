@@ -6,18 +6,13 @@ function App() {
   const [currentMeteo, setcurrentMeteo]=React.useState([])
   const [dailyTemp, setDailyTemp]=React.useState([])
   const [ville, setVille]=React.useState("")
-  const [isSubmitted, setIsSubmitted]=React.useState(false)
-  const [clicked, setClicked]=React.useState(0)
+  const [meteoDisplayed, setMeteoDisplayed]=React.useState(0)
   
-  // const [coordGeo, setCoordGeo]=React.useState(
-  //   {lat:0,
-  //     lon:0
-
-  // })
+//Afficher la meteo de la ville où nous sommes lorsque la page charge
   React.useEffect(
-    ()=>{//Afficher la meteo de la ville où nous sommes 
-     if(!isSubmitted){navigator.geolocation.getCurrentPosition(async function getMeteo(position){
-      
+    ()=>{
+      navigator.geolocation.getCurrentPosition(async function getMeteo(position){
+      //Récupères les datas meteo de la ville où nous sommes
         const res = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${position.coords.latitude}&lon=${position.coords.longitude}&units=metric&appid=e74a92d119ed5997e75aba26772a14e6`)
         if (!res.ok)
         throw new Error(`Country not found (${res.status})`);
@@ -28,19 +23,24 @@ function App() {
             nuage: data.current.weather[0].main,
             icon:  data.current.weather[0].icon
           }) 
-          console.log(data)
-       
+        
+       //Récupère le nom de la ville où nous sommes
           const resv = await fetch(`http://api.openweathermap.org/geo/1.0/reverse?lat=${position.coords.latitude}&lon=${position.coords.longitude}&limit=1&appid=e74a92d119ed5997e75aba26772a14e6`)
           const datav = await resv.json()
-          // console.log(datav)
+    console.log(datav)
           setVille(datav[0].name)
           if (currentMeteo){
-            setIsSubmitted(true)  
-            setClicked(value=> value+1)
+         
+            setMeteoDisplayed(value=> value+1)
           }
-      })}
-      else{
-        async function getMeteo(){
+      })
+    }
+  ,[])
+  //Afficher la meteo de la ville que l'on rentre dans le champs de texte
+  React.useEffect(
+    ()=>{
+     
+      if(meteoDisplayed)   { async function getMeteo(){
           const resv = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${ville}&limit=5&appid=e74a92d119ed5997e75aba26772a14e6`)
           if (!resv.ok)
           throw new Error(`Country not found (${resv.status})`);
@@ -85,27 +85,13 @@ function App() {
                  })))
                  
                   } 
-                  getMeteo()
+                  getMeteo()}
                   
-      }
+      
 
     }
-  ,[clicked])
-  // console.log(currentMeteo)
+  ,[meteoDisplayed])
 
-  
- 
-
-            // React.useEffect(
-            //   ()=>{
-            //     setIsSubmitted(prevValue => !prevValue)
-            //   }
-            // ,[currentMeteo])
-// let interVille =""
-//   function handleChange(e){
-//     setVille(e.target.value) 
-//     // console.log(ville)
-// }
          
 function capitalize(str) {
   const lower = str.toLowerCase();
@@ -117,7 +103,7 @@ function capitalize(str) {
     // setApiResponse(res => !res)
     
     setVille(capitalize(document.getElementById("city-name").value));
-    setClicked(value => value +1)
+    setMeteoDisplayed(value => value +1)
 }
 
 const dailyMeteoElements = dailyTemp.map(dayTemp=>
@@ -130,8 +116,8 @@ const dailyMeteoElements = dailyTemp.map(dayTemp=>
       </header>
      
      <div className='current-meteo-container'>
-     {clicked !==0 && <Meteo ville={ville} icon={currentMeteo.icon} nuage={currentMeteo.nuage} temperature={currentMeteo.temperature}/>}
-     {clicked !==0 && <form id="coordinates-form" onSubmit={handleSubmit}>
+     {meteoDisplayed !==0 && <Meteo ville={ville} icon={currentMeteo.icon} nuage={currentMeteo.nuage} temperature={currentMeteo.temperature}/>}
+     {meteoDisplayed !==0 && <form id="coordinates-form" onSubmit={handleSubmit}>
       <div className='input-label'>
         <label htmlFor="city-name">Entrez le nom de la ville</label>
         <input id="city-name"  name="ville" type="text"  />
@@ -140,7 +126,7 @@ const dailyMeteoElements = dailyTemp.map(dayTemp=>
     </form>}
      </div>
 
-    <div className="daily-meteo-container">{isSubmitted && dailyMeteoElements}</div>
+    <div className="daily-meteo-container">{meteoDisplayed && dailyMeteoElements}</div>
     </div>
   );
 }
