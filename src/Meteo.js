@@ -12,6 +12,8 @@ export default function Meteo(props){
     nuage = "Le ciel est nuageux"
   }else if(props.nuage ==="Mist"){
     nuage = "Il y a de la brume"
+  }else if(props.nuage ==="Thunderstorm"){
+    nuage = "Le temps est orageux"
   }
   return(
     <div className="meteo-container">
